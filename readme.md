@@ -7,7 +7,7 @@ A context-aware Cross-Site Scripting (XSS) payload generation tool for **authori
 **Course:** Ethical Hacking (IKB31603)
 **Institution:** UniKL MIIT
 **Attack Category:** Web Application Attack (XSS Payload Generator)
-**Team:** Nurul Izzany, Nureen Farhah, Adam Borhan, Muhammad Syakirin
+**Team:** Nurul Izzany, Nureen Farhah
 
 ---
 
