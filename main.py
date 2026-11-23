@@ -44,7 +44,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--encode", choices=list(ENCODERS.keys()), default="raw",
                         help="Encoding variant (default: raw)")
     parser.add_argument("--count", type=int, default=1,
-                        help="Number of payload variants to generate (default: 1)")
+                        help="Number of payload variants to generate, capped to available unique variants (default: 1)")
     parser.add_argument("--output", action="store_true",
                         help="Save payloads to output/ directory")
     parser.add_argument("--dry-run", action="store_true",
