@@ -1,0 +1,6 @@
+# blupblup XSS Payload Generator dependencies
+# Python 3.10+ required
+# No external libraries required for core functionality.
+# Uncomment below if you add optional test dependencies.
+
+# pytest>=8.0.0
