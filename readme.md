@@ -47,6 +47,6 @@ All output is saved **locally** to the `output/` directory. No network communica
 **Requires Python 3.10+**
 
 ```bash
-git clone https://github.com/<your-username>/blupblup-xss-generator.git
+git clone https://github.com/whqehh/blupblup-xss-generator.git
 cd blupblup-xss-generator
 pip install -r requirements.txt
