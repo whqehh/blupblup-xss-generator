@@ -52,11 +52,13 @@ def parse_args() -> argparse.Namespace:
 
 def generate(context: str, action: str, encode: str, count: int) -> list[str]:
     encoder = ENCODERS[encode]
-    results = []
-    for i in range(count):
-        raw = build_payload(context, action, variant_index=i)
-        results.append(encoder(raw))
-    return results
+    from payloads.database import PAYLOAD_DB
+    available = len(PAYLOAD_DB[context])
+    if count > available:
+        print(f"[i] Only {available} unique variants exist for context '{context}'. "
+              f"Generating {available} instead of {count}.")
+        count = available
+    return [encoder(build_payload(context, action, variant_index=i)) for i in range(count)]
 
 
 def save_output(payloads: list[str], context: str, encode: str, action: str) -> Path:
