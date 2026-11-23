@@ -3,8 +3,9 @@
 blupblup XSS Payload Generator
 Authorized security testing and educational use only.
 
-Entry point: parses CLI arguments, shows legal disclaimer, dispatches to
-payload builder + encoder, and writes output locally when requested.
+Entry point: parses CLI arguments, installs the kill switch, shows the legal
+disclaimer, dispatches to payload builder + encoder, and writes output locally
+when requested.
 """
 
 import argparse
@@ -14,6 +15,7 @@ from datetime import datetime
 from pathlib import Path
 
 from payloads.builder import build_payload
+from payloads.database import PAYLOAD_DB
 from payloads.encoder import ENCODERS
 from safety.disclaimer import show_disclaimer
 from safety.killswitch import install_killswitch
@@ -51,14 +53,23 @@ def parse_args() -> argparse.Namespace:
 
 
 def generate(context: str, action: str, encode: str, count: int) -> list[str]:
+    """
+    Generate up to `count` payload variants for the given context.
+
+    The number of unique variants is limited by the number of templates
+    available for that context. If the user requests more, we cap to the
+    available count and inform them, instead of emitting duplicates.
+    """
     encoder = ENCODERS[encode]
-    from payloads.database import PAYLOAD_DB
     available = len(PAYLOAD_DB[context])
+
     if count > available:
-        print(f"[i] Only {available} unique variants exist for context '{context}'. "
-              f"Generating {available} instead of {count}.")
+        print(f"[i] Only {available} unique variant(s) exist for context "
+              f"'{context}'. Generating {available} instead of {count}.")
         count = available
-    return [encoder(build_payload(context, action, variant_index=i)) for i in range(count)]
+
+    return [encoder(build_payload(context, action, variant_index=i))
+            for i in range(count)]
 
 
 def save_output(payloads: list[str], context: str, encode: str, action: str) -> Path:
@@ -81,14 +92,20 @@ def save_output(payloads: list[str], context: str, encode: str, action: str) -> 
 def main() -> int:
     args = parse_args()
 
+    # Install kill switch BEFORE anything interactive so Ctrl+C at the
+    # disclaimer prompt exits cleanly instead of raising a traceback.
+    install_killswitch()
+
     if not show_disclaimer():
         print("[!] Authorization not confirmed. Exiting.")
         return 1
 
-    install_killswitch()
+    if args.count < 1:
+        print("[!] --count must be a positive integer.")
+        return 1
 
-    if args.count < 1 or args.count > 100:
-        print("[!] --count must be between 1 and 100.")
+    if args.count > 1000:
+        print("[!] --count must be 1000 or less.")
         return 1
 
     try:

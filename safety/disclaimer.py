@@ -32,4 +32,4 @@ def show_disclaimer() -> bool:
         "Do you confirm you have explicit written authorization "
         "for the target environment? (yes/no): "
     ).strip().lower()
-    return response == "yes"
+    return response in ("y", "yes")
